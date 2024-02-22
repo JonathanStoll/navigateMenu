@@ -1,6 +1,8 @@
-import { Text, View, Image, StyleSheet } from "react-native";
+import { Text, View, Image, StyleSheet, ScrollView } from "react-native";
 import { MEALS } from "../data/dummy-data";
 import MealDetails from "../components/MealDetails";
+import Subtitle from "../components/mealDetail/Subtitle";
+import List from "../components/mealDetail/List";
 function MealScreen({ route }) {
   const id = route.params.id;
   const selectedMeal = MEALS.find((meal) => meal.id === id);
@@ -12,21 +14,21 @@ function MealScreen({ route }) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Image source={{ uri: selectedMeal.imageUrl }} style={styles.image} />
-      <Text>{selectedMeal.title}</Text>
+      <Text style={styles.title}>{selectedMeal.title}</Text>
       <View>
-        <MealDetails {...selectedMealDetails} />
+        <MealDetails {...selectedMealDetails} textStyle={{ color: "white" }} />
       </View>
-      <Text>ingridents</Text>
-      {selectedMeal.ingredients.map((ingridient) => (
-        <Text key={ingridient}>{ingridient}</Text>
-      ))}
-      <Text>steps</Text>
-      {selectedMeal.steps.map((step) => (
-        <Text key={step}>{step}</Text>
-      ))}
-    </View>
+      <View style={styles.listOuterContainer}>
+        <View style={styles.listContainer}>
+          <Subtitle title={"Ingridients"} />
+          <List data={selectedMeal.ingredients} />
+          <Subtitle title={"Steps"} />
+          <List data={selectedMeal.steps} />
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -35,12 +37,23 @@ export default MealScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 24
   },
   image: {
     width: "100%",
-    height: 200,
+    height: 350,
   },
   title: {
-    fontSize: 18,
+    fontWeight: "bold",
+    fontSize: 24,
+    textAlign: "center",
+    margin: 8,
+    color: "white",
+  },
+  listOuterContainer: {
+    alignItems: "center",
+  },
+  listContainer: {
+    width: "80%",
   },
 });
